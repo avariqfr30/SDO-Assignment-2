@@ -25,12 +25,12 @@ terraform output -raw app_public_hostname
 
 terraform output -raw db_public_hostname
 
+sudo apt install jq
+
 echo "Running ansible to output .json"
 terraform output -json > outputs.json
-
-db_public_hostname=$(jq -r '.db_public_hustname.value' outputs.json)
-
-app_public_hostname=$(jq -r '.app_public_hustname.value' outputs.json)
+db_public_hostname=$(jq -r '.db_public_hostname.value' outputs.json)
+app_public_hostname=$(jq -r '.app_public_hostname.value' outputs.json)
 
 echo "Running ansible to configure Foo DB"
 cd .. # Back to root of lab
