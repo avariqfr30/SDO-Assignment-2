@@ -20,10 +20,21 @@ terraform validate
 echo "Running terraform apply, get ready to review and approve actions..."
 terraform apply
 
+echo "Output of instance IPs"
+terraform output -raw app_public_hostname
+
+terraform output -raw db_public_hostname
+
+echo "Running ansible to output .json"
+terraform output -json > outputs.json
+
+db_public_hostname=$(jq -r '.db_public_hustname.value' outputs.json)
+
+app_public_hostname=$(jq -r '.app_public_hustname.value' outputs.json)
+
 echo "Running ansible to configure Foo DB"
 cd .. # Back to root of lab
 ansible-playbook ansible/db-playbook.yml -i infra/ansible-inventory.yml --private-key "infra/${path_to_ssh_key}"
 
-echo "Running ansible to configure foo database"
-cd ..
-ansible-playbook ansible/app-playbook.yml -i infra/ansible-inventory.yml --private-key "infra/${path_to_ssh_key}"
+echo "Running ansible to configure foo app"
+ansible-playbook ansible/app-playbook.yml -e "db_public_hostname=${db_public_hostname}" -i infra/ansible-inventory.yml --private-key "infra/${path_to_ssh_key}"

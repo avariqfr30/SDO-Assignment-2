@@ -29,24 +29,25 @@ resource "aws_security_group" "app" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # PostgreSQL in
-  ingress {
-    from_port   = 80
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.db.private_ip}/32"]
-  }
+  # PostgreSQL in/out
 
   ingress {
-    from_port   = 80
+    from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.db.public_ip}/32"]
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   # HTTPS out
   egress {
-    from_port   = 0
+    from_port   = 443
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
