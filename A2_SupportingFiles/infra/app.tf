@@ -30,7 +30,6 @@ resource "aws_security_group" "app" {
   }
 
   # PostgreSQL in/out
-
   ingress {
     from_port   = 5432
     to_port     = 5432

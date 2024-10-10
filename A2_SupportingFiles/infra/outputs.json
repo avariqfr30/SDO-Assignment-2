@@ -2,11 +2,11 @@
   "app_public_hostname": {
     "sensitive": false,
     "type": "string",
-    "value": "ec2-54-147-135-199.compute-1.amazonaws.com"
+    "value": "ec2-98-84-183-245.compute-1.amazonaws.com"
   },
   "db_public_hostname": {
     "sensitive": false,
     "type": "string",
-    "value": "ec2-54-210-175-144.compute-1.amazonaws.com"
+    "value": "ec2-98-84-163-69.compute-1.amazonaws.com"
   }
 }
