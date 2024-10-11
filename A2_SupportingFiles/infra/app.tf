@@ -29,14 +29,14 @@ resource "aws_security_group" "app" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # PostgreSQL in/out
+  # PostgreSQL in
   ingress {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
+  # PorstgreSQL out
   egress {
     from_port   = 5432
     to_port     = 5432
