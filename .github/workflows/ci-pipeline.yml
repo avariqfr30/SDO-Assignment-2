@@ -34,3 +34,7 @@ jobs:
       run: |
         chmod +x deploy.sh
         echo yes | ./deploy.sh
+    - name: Destroy instances after run
+      run: |
+        cd infra
+        terraform destroy
