@@ -3,38 +3,37 @@ name: Run Deployment Script
 on:
   push:
     branches:
-      - main  # Change to your preferred branch
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    - name: Set up AWS CLI
-      run: |
-        sudo apt-get install -y awscli
-        aws configure set aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}"
-        aws configure set aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-        aws configure set aws_session_token "${{ secrets.AWS_SESSION_TOKEN }}"
-        aws configure set default.region us-east-1  # Change to your preferred region
-
-
-    - name: Install Terraform
-      run: |
-        curl -LO https://releases.hashicorp.com/terraform/1.5.0/terraform_1.5.0_linux_amd64.zip  # Update to the latest version
-        unzip terraform_1.5.0_linux_amd64.zip
-        sudo mv terraform /usr/local/bin/
-        terraform -version
-
-    - name: Install JQ
-      run: sudo apt-get install -y jq
-
-    - name: Run Deployment Script
-      run: |
-        chmod +x deploy.sh
-        echo yes | ./deploy.sh
-    - name: Destroy instances after run
-      run: |
-        cd infra
-        terraform destroy
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up AWS CLI
+        run: |
+          sudo apt-get install -y awscli
+          aws configure set aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}"
+          aws configure set aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          aws configure set aws_session_token "${{ secrets.AWS_SESSION_TOKEN }}"
+          aws configure set default.region us-east-1
+      - name: Install Terraform
+        run: |
+          curl -LO https://releases.hashicorp.com/terraform/1.5.0/terraform_1.5.0_linux_amd64.zip
+          unzip terraform_1.5.0_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
+          terraform -version
+      - name: Install JQ
+        run: sudo apt-get install -y jq
+      - name: Run Deployment Script
+        id: deploy_step
+        run: |
+          chmod +x deploy.sh
+          echo yes | ./deploy.sh
+        continue-on-error: true
+      - name: Run Terraform Destroy if Deployment Script Fails
+        if: failure()
+        run: |
+          cd infra
+          terraform destroy -auto-approve
