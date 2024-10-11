@@ -16,13 +16,9 @@ jobs:
         sudo apt-get install -y awscli
         aws configure set aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}"
         aws configure set aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+        aws configure set aws_session_token "${{ secrets.AWS_SESSION_TOKEN }}"
         aws configure set default.region us-east-1  # Change to your preferred region
 
-    - name: Set up SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
 
     - name: Install Terraform
       run: |
