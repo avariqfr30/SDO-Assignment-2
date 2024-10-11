@@ -36,6 +36,5 @@ jobs:
 
     - name: Run Deployment Script
       run: |
-        cd ..
         chmod +x deploy.sh
         ./deploy.sh
